@@ -1,4 +1,4 @@
-package com.group2.milestone2.api.auth;
+package com.group2.milestone2.api.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

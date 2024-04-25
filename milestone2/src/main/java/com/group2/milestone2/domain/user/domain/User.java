@@ -29,7 +29,7 @@ public class User {
     public static User create(String userId, String password){
         User user = new User();
         user.userId = userId;
-        user.password = password
+        user.password = password;
         return user;
     }
 
