@@ -2,7 +2,7 @@ package com.group2.milestone2.domain.line_candidate.domain;
 
 import com.group2.milestone2.domain.line_tag.domain.LineTag;
 import com.group2.milestone2.domain.movie.domain.Movie;
-import com.group2.milestone2.domain.user.domain.User;
+import com.group2.milestone2.domain.user.domain.TheUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -25,8 +25,8 @@ public class LineCandidate {
     private List<LineTag> lineTagList;
 
     @ManyToMany
-    private List<User> likedUser;
+    private List<TheUser> likedUser;
 
     @ManyToMany
-    private List<User> dislikedUser;
+    private List<TheUser> dislikedUser;
 }

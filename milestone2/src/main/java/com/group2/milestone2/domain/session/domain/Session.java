@@ -1,23 +1,26 @@
 package com.group2.milestone2.domain.session.domain;
 
-import com.group2.milestone2.domain.user.domain.User;
+import com.group2.milestone2.domain.user.domain.TheUser;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import org.aspectj.apache.bcel.classfile.Module.Uses;
 
 @Entity
 public class Session {
 
     @Id
-    private String value;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String content;
 
     @OneToOne
-    private User user;
+    private TheUser user;
 
-    public static Session create(String value, User user){
+    public static Session create(String value, TheUser user){
         Session session = new Session();
-        session.value = value;
+        session.content = value;
         session.user = user;
         return session;
     }

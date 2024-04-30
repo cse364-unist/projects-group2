@@ -5,11 +5,11 @@ import com.group2.milestone2.api.auth.dto.SignInResponse;
 import com.group2.milestone2.api.auth.dto.SignUpRequestDto;
 import com.group2.milestone2.domain.session.domain.Session;
 import com.group2.milestone2.domain.session.repository.SessionRepository;
-import com.group2.milestone2.domain.user.domain.User;
-import com.group2.milestone2.domain.user.repository.UserRepository;
+import com.group2.milestone2.domain.user.domain.TheUser;
+import com.group2.milestone2.domain.user.repository.TheUserRepository;
+import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,33 +17,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
-    private final UserRepository userRepository;
+    private final TheUserRepository userRepository;
     private final SessionRepository sessionRepository;
 
-    @Transactional
+    @Transactional("transactionManager")
     public void signUp(SignUpRequestDto request){
-        if (request.getPassword1().equals(request.getPassword2())){
+        if (!request.getPassword1().equals(request.getPassword2())){
             throw new RuntimeException("password mismatch");
         }
         if(userRepository.findById(request.getUserId()).isPresent()){
             throw new RuntimeException("user already exists");
         }
 
-        User user = User.create(request.getUserId(), request.getPassword1());
+        TheUser user = TheUser.create(request.getUserId(), request.getPassword1());
         userRepository.save(user);
     }
 
-    @Transactional
+    @Transactional("transactionManager")
     public SignInResponse signIn(SignInRequestDto request){
-        User user = userRepository.findById(request.getUserId()).orElseThrow(RuntimeException::new);
+        TheUser user = userRepository.findById(request.getUserId()).orElseThrow(RuntimeException::new);
         if(!user.getPassword().equals(request.getPassword())){
             throw new RuntimeException();
         }
         // login success
+        Optional<Session> sessionThatIsFound = sessionRepository.findByUserId(user.getUserId());
+        sessionThatIsFound.ifPresent(sessionRepository::delete);
+
         String sessionString;
         do {
             sessionString = generateSessionString(user);
-        }while (sessionRepository.findById(sessionString).isPresent());
+        }while (sessionRepository.findByContent(sessionString).isPresent());
         sessionRepository.save(Session.create(sessionString, user));
 
 
@@ -52,7 +55,7 @@ public class AuthService {
             .build();
     }
 
-    private String generateSessionString(User user){
+    private String generateSessionString(TheUser user){
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
@@ -64,5 +67,10 @@ public class AuthService {
         }
 
         return sb.toString();  // 최종적으로 생성된 랜덤 문자열 반환
+    }
+
+    @Transactional("transactionManager")
+    public void signOut(String sessionString){
+        sessionRepository.deleteAllByContent(sessionString);
     }
 }

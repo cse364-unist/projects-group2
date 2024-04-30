@@ -14,4 +14,12 @@ public class LineTag {
     public void setContent(String content){
         this.content = content;
     }
+
+    public static LineTag create(
+        String content
+    ){
+        LineTag lineTag = new LineTag();
+        lineTag.content = content;
+        return lineTag;
+    }
 }

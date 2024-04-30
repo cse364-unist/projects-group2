@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Builder
+@Getter
 public class SignInResponse {
 
     private String session;
