@@ -34,7 +34,7 @@ public class LineQuote {
     private List<LineTag> lineTagList;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favoriteLines")
     private List<TheUser> favoriteUsers;
 
     public void setFavoriteUsers(List<TheUser> favoriteUsers) {

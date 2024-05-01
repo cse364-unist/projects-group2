@@ -8,5 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class TagListResponse {
-    List<TagDto> tagDtoList;
+    List<String> tagDtoList;
 }

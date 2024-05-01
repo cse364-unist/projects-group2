@@ -8,13 +8,21 @@ import com.group2.milestone2.domain.line_tag.repository.LineTagRepository;
 import com.group2.milestone2.domain.movie.domain.Movie;
 import com.group2.milestone2.domain.movie.repository.MovieRepository;
 import com.group2.milestone2.domain.user.repository.TheUserRepository;
+import com.univocity.parsers.tsv.TsvParser;
+import com.univocity.parsers.tsv.TsvParserSettings;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +42,11 @@ class LoadDatabase {
         @Autowired MovieRepository movieRepository
     ) {
         List<List<String>> csvData = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/quote_sheet.csv"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                csvData.add(Arrays.asList(values));
-            }
+        try (Reader inputReader = new InputStreamReader(new FileInputStream(
+            "src/main/resources/quote_sheet.tsv"), StandardCharsets.UTF_8)) {
+            TsvParser parser = new TsvParser(new TsvParserSettings());
+            csvData = parser.parseAll(inputReader)
+                .stream().map(strings -> Arrays.stream(strings).toList()).collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,7 +56,7 @@ class LoadDatabase {
 
         Movie movie = null;
         for (List<String> stringList : csvData) {
-            if (!stringList.get(0).isEmpty()) {
+            if (null != stringList.get(0)) {
                 movie = Movie.create(
                     stringList.get(0),
                     stringList.get(1),
@@ -71,18 +78,20 @@ class LoadDatabase {
         }
 
         return args -> {
-            log.info("saving line quote date from the csv");
+            log.info("saving line quote date from the tsv");
         };
     }
 
     private List<LineTag> parseAndSaveLineTag(String lineTagsString, LineTagRepository lineTagRepository) {
-        String[] values = lineTagsString.split(",");
+        String[] values = lineTagsString.split(";");
         List<LineTag> lineTagList = new ArrayList<>();
         for (String tagString : values
         ) {
-            LineTag lineTag = lineTagRepository.findById(tagString)
-                .orElse(lineTagRepository.save(LineTag.create(tagString)));
-            lineTagList.add(lineTag);
+            if (!tagString.isEmpty()) {
+                LineTag lineTag = lineTagRepository.findById(tagString)
+                    .orElse(lineTagRepository.save(LineTag.create(tagString)));
+                lineTagList.add(lineTag);
+            }
         }
         return lineTagList;
     }

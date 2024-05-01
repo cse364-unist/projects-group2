@@ -27,6 +27,7 @@ public class SessionRepositoryCustomImpl implements SessionRepositoryCustom {
         QSession session = QSession.session;
 
         return Optional.ofNullable(queryFactory.select(session.user)
+            .from(session)
             .where(session.content.eq(content))
             .fetchOne());
     }

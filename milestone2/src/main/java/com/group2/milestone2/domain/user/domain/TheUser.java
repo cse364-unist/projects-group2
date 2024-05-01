@@ -4,6 +4,7 @@ import com.group2.milestone2.domain.line_quote.domain.LineQuote;
 import com.group2.milestone2.domain.line_candidate.domain.LineCandidate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
@@ -22,10 +23,10 @@ public class TheUser {
     @Column(length = 20)
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<LineQuote> favoriteLines;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<LineCandidate> likedCandidates;
 
     public static TheUser create(String userId, String password){

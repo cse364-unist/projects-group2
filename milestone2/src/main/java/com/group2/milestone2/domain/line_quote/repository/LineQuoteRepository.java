@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LineQuoteRepository extends JpaRepository<LineQuote, Long> {
+public interface LineQuoteRepository extends JpaRepository<LineQuote, Long>, LineQuoteRepositoryCustom {
 
 }
