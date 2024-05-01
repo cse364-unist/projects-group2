@@ -29,6 +29,9 @@ public class TheUser {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<LineCandidate> likedCandidates;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<LineCandidate> dislikedCandidates;
+
     public static TheUser create(String userId, String password){
         TheUser user = new TheUser();
         user.userId = userId;
@@ -42,6 +45,10 @@ public class TheUser {
 
     public void setLikedCandidates(List<LineCandidate> lineCandidates){
         this.likedCandidates = lineCandidates;
+    }
+
+    public void setDislikedCandidates(List<LineCandidate> lineCandidates){
+        this.dislikedCandidates = lineCandidates;
     }
 
 }

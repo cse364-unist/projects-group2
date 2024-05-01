@@ -24,8 +24,6 @@ public class LinesService {
     private final LineQuoteRepository lineQuoteRepository;
 
     public SearchLinesResponse searchLines(SearchLinesRequestDto requestDto, String session) {
-//        tags: string[]  // nullable. 길이가 0~3인 검색할 태그 리스트로 보내주면 됨. args로 리스트 보내는 법은 ?tags=어쩌구&tags=저쩌구&... 하면 되는걸로 앎. 이러면 spring에서 tags=[“어쩌구”, “저쩌구”] 로 해석할 수 있음
-//        favorite: bool //?favorite:이 true, 1, yes면 spring에서 true로 해석하고, false, 0, no면 false로 해석함
         AuthHandler authHandler = new AuthHandler(sessionRepository);
         TheUser user = authHandler.authorizeSession(session).orElseThrow(RuntimeException::new);
 
