@@ -8,7 +8,7 @@ mvn clean test jacoco:report
 # run the application
 ```
 docker build -t group2-milestone2 .
-docker run -e USERNAME=<username> -e PASSWORD=<password> --network host group2-milestone2
+docker run -e USERNAME=<username> -e ACCESS_TOKEN=<access_token> --network host group2-milestone2
 ```
 
 
@@ -356,7 +356,7 @@ args:
 
 ```
 curl -X 'GET' \
-  'http://localhost:8080/lines/search?tags=무서운&favorite=false' \
+  'http://localhost:8080/lines/search?tags=%EB%AC%B4%EC%84%9C%EC%9A%B4&favorite=false' \
   -H 'accept: */*' \
   -H 'Cookie: session=<yourSessionHere>'
 ```
