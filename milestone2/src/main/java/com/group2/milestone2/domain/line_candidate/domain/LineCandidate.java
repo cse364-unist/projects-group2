@@ -28,6 +28,8 @@ public class LineCandidate {
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Movie movie;
 
+    private String actor;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<LineTag> lineTagList;
 
@@ -36,16 +38,39 @@ public class LineCandidate {
     public static LineCandidate create(
         String content,
         Movie movie,
+        String actor,
         List<LineTag> lineTagList,
         LocalDateTime expireAt
+
     ) {
         LineCandidate lineCandidate = new LineCandidate();
         lineCandidate.content = content;
         lineCandidate.movie = movie;
+        lineCandidate.actor = actor;
         lineCandidate.lineTagList = lineTagList;
         lineCandidate.expireAt = expireAt;
         lineCandidate.likedUser = new ArrayList<>();
         lineCandidate.dislikedUser = new ArrayList<>();
+        return lineCandidate;
+    }
+
+    public static LineCandidate create(
+        String content,
+        Movie movie,
+        String actor,
+        List<LineTag> lineTagList,
+        LocalDateTime expireAt,
+        List<TheUser> likedUser,
+        List<TheUser> dislikedUser
+    ) {
+        LineCandidate lineCandidate = new LineCandidate();
+        lineCandidate.content = content;
+        lineCandidate.movie = movie;
+        lineCandidate.actor = actor;
+        lineCandidate.lineTagList = lineTagList;
+        lineCandidate.expireAt = expireAt;
+        lineCandidate.likedUser = likedUser;
+        lineCandidate.dislikedUser = dislikedUser;
         return lineCandidate;
     }
 

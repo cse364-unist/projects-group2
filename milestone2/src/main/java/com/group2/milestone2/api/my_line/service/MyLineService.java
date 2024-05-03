@@ -45,6 +45,7 @@ public class MyLineService {
         LineCandidate lineCandidate = LineCandidate.create(
             requestDto.getLine(),
             movie,
+            requestDto.getActor(),
             lineTagList,
             LocalDateTime.now().plusDays(1)
         );

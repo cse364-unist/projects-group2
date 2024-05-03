@@ -1,5 +1,6 @@
 package com.group2.milestone2.domain.line_quote.domain;
 
+import com.group2.milestone2.domain.line_candidate.domain.LineCandidate;
 import com.group2.milestone2.domain.line_tag.domain.LineTag;
 import com.group2.milestone2.domain.movie.domain.Movie;
 import com.group2.milestone2.domain.user.domain.TheUser;
@@ -52,6 +53,15 @@ public class LineQuote {
         lineQuote.actor = actor;
         lineQuote.movie = movie;
         lineQuote.lineTagList = lineTagList;
+        return lineQuote;
+    }
+
+    public static LineQuote fromLineCandidate(LineCandidate lineCandidate){
+        LineQuote lineQuote = new LineQuote();
+        lineQuote.content = lineCandidate.getContent();
+        lineQuote.actor = lineCandidate.getActor();
+        lineQuote.movie = lineCandidate.getMovie();
+        lineQuote.lineTagList = lineCandidate.getLineTagList();
         return lineQuote;
     }
 

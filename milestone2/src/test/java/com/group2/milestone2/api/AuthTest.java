@@ -5,10 +5,15 @@ import static org.mockito.ArgumentMatchers.any;
 import com.group2.milestone2.api.auth.dto.SignInRequestDto;
 import com.group2.milestone2.api.auth.dto.SignUpRequestDto;
 import com.group2.milestone2.api.auth.service.AuthService;
+import com.group2.milestone2.domain.line_candidate.domain.LineCandidate;
+import com.group2.milestone2.domain.line_candidate.domain.QLineCandidate;
+import com.group2.milestone2.domain.session.domain.QSession;
 import com.group2.milestone2.domain.session.domain.Session;
 import com.group2.milestone2.domain.session.repository.SessionRepository;
 import com.group2.milestone2.domain.user.domain.TheUser;
 import com.group2.milestone2.domain.user.repository.TheUserRepository;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.PathInits;
 import java.util.Optional;
 import java.util.OptionalInt;
 import org.junit.jupiter.api.Assertions;
@@ -149,5 +154,22 @@ public class AuthTest {
     @Test
     void signOutEmpty() {
         Assertions.assertDoesNotThrow(() -> authService.signOut(""));
+    }
+
+    @Mock
+    PathInits pathInits;
+    @Mock
+    PathMetadata pathMetadata;
+    @Test
+    void qSessionTrue(){
+        Mockito.when(pathInits.isInitialized("user"))
+            .thenReturn(true);
+        Assertions.assertDoesNotThrow(()->new QSession(Session.class, pathMetadata, pathInits));
+    }
+    @Test
+    void qSessionFalse(){
+        Mockito.when(pathInits.isInitialized("user"))
+            .thenReturn(false);
+        Assertions.assertDoesNotThrow(()->new QSession(Session.class, pathMetadata, pathInits));
     }
 }

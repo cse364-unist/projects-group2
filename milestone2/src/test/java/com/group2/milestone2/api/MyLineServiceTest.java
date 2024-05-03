@@ -6,6 +6,7 @@ import com.group2.milestone2.api.my_line.dto.LineCandidateIdDto;
 import com.group2.milestone2.api.my_line.dto.UploadMyLineRequestDto;
 import com.group2.milestone2.api.my_line.service.MyLineService;
 import com.group2.milestone2.domain.line_candidate.domain.LineCandidate;
+import com.group2.milestone2.domain.line_candidate.domain.QLineCandidate;
 import com.group2.milestone2.domain.line_candidate.repository.LineCandidateRepository;
 import com.group2.milestone2.domain.line_quote.repository.LineQuoteRepository;
 import com.group2.milestone2.domain.line_tag.domain.LineTag;
@@ -14,6 +15,8 @@ import com.group2.milestone2.domain.movie.domain.Movie;
 import com.group2.milestone2.domain.movie.repository.MovieRepository;
 import com.group2.milestone2.domain.session.repository.SessionRepository;
 import com.group2.milestone2.domain.user.domain.TheUser;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.PathInits;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +87,7 @@ public class MyLineServiceTest {
 
     @Test
     void getMyLineBoardTestNormal() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), new ArrayList<>(), LocalDateTime.now());
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, new ArrayList<>(), LocalDateTime.now());
         TheUser theUser = new TheUser();
         List<LineCandidate> foundLineCandidates = new ArrayList<>();
         foundLineCandidates.add(lineCandidate);
@@ -113,7 +116,7 @@ public class MyLineServiceTest {
 
     @Test
     void likeMyLineTestNormal() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null,null, null);
         TheUser theUser = new TheUser();
         List<LineCandidate> dislikedCandidates = new ArrayList<>();
         dislikedCandidates.add(lineCandidate);
@@ -131,7 +134,7 @@ public class MyLineServiceTest {
 
     @Test
     void likeMyLineTestNotDisliked() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null, null);
         TheUser theUser = new TheUser();
         theUser.setDislikedCandidates(new ArrayList<>());
         theUser.setLikedCandidates(new ArrayList<>());
@@ -147,7 +150,7 @@ public class MyLineServiceTest {
 
     @Test
     void unlikeMyLineNormal() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null, null);
         TheUser theUser = new TheUser();
         List<LineCandidate> likedCandidates = new ArrayList<>();
         likedCandidates.add(lineCandidate);
@@ -165,7 +168,7 @@ public class MyLineServiceTest {
 
     @Test
     void unlikeMyLineNotLiked() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null, null);
         TheUser theUser = new TheUser();
         theUser.setDislikedCandidates(new ArrayList<>());
         theUser.setLikedCandidates(new ArrayList<>());
@@ -182,7 +185,7 @@ public class MyLineServiceTest {
 
     @Test
     void dislikeMyLineTestNormal() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null, null);
         TheUser theUser = new TheUser();
         List<LineCandidate> likedCandidates = new ArrayList<>();
         likedCandidates.add(lineCandidate);
@@ -200,7 +203,7 @@ public class MyLineServiceTest {
 
     @Test
     void dislikeMyLineTestNotDisliked() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null, null);
         TheUser theUser = new TheUser();
         theUser.setDislikedCandidates(new ArrayList<>());
         theUser.setLikedCandidates(new ArrayList<>());
@@ -216,7 +219,7 @@ public class MyLineServiceTest {
 
     @Test
     void undislikeMyLineNormal() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null, null);
         TheUser theUser = new TheUser();
         List<LineCandidate> dislikedCandidates = new ArrayList<>();
         dislikedCandidates.add(lineCandidate);
@@ -234,7 +237,7 @@ public class MyLineServiceTest {
 
     @Test
     void undislikeMyLineNotLiked() {
-        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null);
+        LineCandidate lineCandidate = LineCandidate.create("content", Movie.create("title", null, null, null), null, null, null);
         TheUser theUser = new TheUser();
         theUser.setDislikedCandidates(new ArrayList<>());
         theUser.setLikedCandidates(new ArrayList<>());
@@ -246,5 +249,22 @@ public class MyLineServiceTest {
         LineCandidateIdDto requestDto = new LineCandidateIdDto(1L);
 
         Assertions.assertDoesNotThrow(() -> mylineService.undislikeMyLine(requestDto, "normalSession"));
+    }
+
+    @Mock
+    PathInits pathInits;
+    @Mock
+    PathMetadata pathMetadata;
+    @Test
+    void qLineCandidateTrue(){
+        Mockito.when(pathInits.isInitialized("movie"))
+            .thenReturn(true);
+        Assertions.assertDoesNotThrow(()->new QLineCandidate(LineCandidate.class, pathMetadata, pathInits));
+    }
+    @Test
+    void qLineCandidateFalse(){
+        Mockito.when(pathInits.isInitialized("movie"))
+            .thenReturn(false);
+        Assertions.assertDoesNotThrow(()->new QLineCandidate(LineCandidate.class, pathMetadata, pathInits));
     }
 }
