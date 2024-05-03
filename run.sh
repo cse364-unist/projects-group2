@@ -1,4 +1,4 @@
-git clone https://github.com/cse364-unist/projects-group2.git
+git clone https://${USERNAME}:${PASSWORD}@gitserver.com/cse364-unist/projects-group2.git
 
 cd /app/projects-group2
 
