@@ -8,7 +8,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY ./run.sh ./run.sh
+COPY ./run.sh .
 
 RUN chmod -R 755 .
 
