@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
@@ -24,7 +25,7 @@ public class LineCandidate {
     private Long id;
 
     private String content;
-    @ManyToOne( cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Movie movie;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -37,12 +38,14 @@ public class LineCandidate {
         Movie movie,
         List<LineTag> lineTagList,
         LocalDateTime expireAt
-    ){
+    ) {
         LineCandidate lineCandidate = new LineCandidate();
         lineCandidate.content = content;
         lineCandidate.movie = movie;
         lineCandidate.lineTagList = lineTagList;
         lineCandidate.expireAt = expireAt;
+        lineCandidate.likedUser = new ArrayList<>();
+        lineCandidate.dislikedUser = new ArrayList<>();
         return lineCandidate;
     }
 
