@@ -8,7 +8,7 @@ chmod -R 755 .
 
 cd milestone2
 
-mvn jacoco:report
+mvn clean test jacoco:report
 
 # mvn clean package
 
