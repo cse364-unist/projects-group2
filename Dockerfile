@@ -10,6 +10,8 @@ WORKDIR /app
 
 COPY ./run.sh ./run.sh
 
+RUN chmod -R 755 .
+
 EXPOSE 8080
 
 ENTRYPOINT ./run.sh

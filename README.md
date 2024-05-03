@@ -8,7 +8,7 @@ mvn clean test jacoco:report
 # run the application
 ```
 docker build -t group2-milestone2 .
-docker run --nethost host group2-milestone2
+docker run --network host group2-milestone2
 ```
 
 
