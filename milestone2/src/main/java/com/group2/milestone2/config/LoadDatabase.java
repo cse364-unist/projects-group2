@@ -65,16 +65,14 @@ class LoadDatabase {
                 );
                 movieRepository.save(movie);
             }
-            if (movie != null) {
-                List<LineTag> lineTagList = parseAndSaveLineTag(stringList.get(5), lineTagRepository);
-                LineQuote lineQuote = LineQuote.create(
-                    stringList.get(3),
-                    stringList.get(4),
-                    movie,
-                    lineTagList
-                );
-                lineQuoteRepository.save(lineQuote);
-            }
+            List<LineTag> lineTagList = parseAndSaveLineTag(stringList.get(5), lineTagRepository);
+            LineQuote lineQuote = LineQuote.create(
+                stringList.get(3),
+                stringList.get(4),
+                movie,
+                lineTagList
+            );
+            lineQuoteRepository.save(lineQuote);
         }
 
         return args -> {
@@ -87,11 +85,9 @@ class LoadDatabase {
         List<LineTag> lineTagList = new ArrayList<>();
         for (String tagString : values
         ) {
-            if (!tagString.isEmpty()) {
-                LineTag lineTag = lineTagRepository.findById(tagString)
-                    .orElse(lineTagRepository.save(LineTag.create(tagString)));
-                lineTagList.add(lineTag);
-            }
+            LineTag lineTag = lineTagRepository.findById(tagString)
+                .orElse(lineTagRepository.save(LineTag.create(tagString)));
+            lineTagList.add(lineTag);
         }
         return lineTagList;
     }
