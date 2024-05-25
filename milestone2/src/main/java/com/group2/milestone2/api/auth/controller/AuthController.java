@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.Collections;
 @RestController
 @RequestMapping(path = "/auth")
 @RequiredArgsConstructor
@@ -33,6 +33,11 @@ public class AuthController {
     @GetMapping("/signout")
     public void signOut(@CookieValue String session) {
         authService.signOut(session);
+    }
+    @GetMapping("/check")
+    public ResponseEntity<?> checkLoginStatus(@CookieValue(value = "session", required = false) String session) {
+        boolean loggedIn = authService.isLoggedIn(session);
+        return ResponseEntity.ok(Collections.singletonMap("loggedIn", loggedIn));
     }
 
 

@@ -12,7 +12,6 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -72,5 +71,9 @@ public class AuthService {
     @Transactional("transactionManager")
     public void signOut(String sessionString){
         sessionRepository.deleteAllByContent(sessionString);
+    }
+
+    public boolean isLoggedIn(String session) {
+        return session != null && sessionRepository.findByContent(session).isPresent();
     }
 }
