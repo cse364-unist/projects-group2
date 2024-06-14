@@ -12,6 +12,7 @@
   <artifactId>milestone2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>milestone2</name>
+  <packaging>war</packaging>
   <description>milestone2</description>
   <properties>
     <java.version>17</java.version>
@@ -130,7 +131,23 @@
   </dependencies>
 
   <build>
+    <finalName>your-service</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <classifier>exec</classifier>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.3</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
       <plugin> <!--test-->
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
