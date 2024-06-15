@@ -32,6 +32,6 @@ frontend/node_modules
 frontend/build
 frontend/package-lock.json
 
-src/test/resources/static
+src/main/resources/static/static
 ### VS Code ###
 .vscode/
