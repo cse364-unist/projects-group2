@@ -3,7 +3,7 @@ FROM node:14 AS build-frontend
 
 
 WORKDIR /app
-COPY ./milestone2 ./
+COPY ./milestone2 /app/milestone2
 
 # 필요한 디렉토리를 생성
 RUN mkdir -p ../src/main/resources/static/
@@ -24,15 +24,18 @@ RUN apt-get update && apt-get install -y maven
 ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 
+COPY ./milestone2 /app/milestone2
 
+# 디버깅을 위한 파일 목록 확인 (Maven 빌드 전)
 # Spring Boot 애플리케이션 빌드
 WORKDIR /app/milestone2
-RUN mvn clean package 
+RUN mvn clean package > build.log 2>&1 || (cat build.log && false)
+# RUN cat build.log
+# 빌드 로그 출력
 
 # 생성된 WAR 파일을 Tomcat의 웹앱 디렉토리로 복사
-RUN chmod -R 755 /app/milestone2/target
-RUN ls -l /app/milestone2/target 
-COPY /app/milestone2/target/your-service.war $CATALINA_HOME/webapps/
+RUN chmod -R 755 target
+RUN cp /app/milestone2/target/your-service.war $CATALINA_HOME/webapps/
 
 # Tomcat 시작
 CMD ["catalina.sh", "run"]
