@@ -1,26 +1,35 @@
-# 베이스 이미지로 Tomcat 사용
-FROM tomcat:9.0
+# 1단계: Node 이미지를 사용하여 프론트엔드 빌드
+FROM node:14 AS build-frontend
 
-# Maven 설치
-RUN apt-get update && apt-get install -y maven
+WORKDIR /app/frontend
+
+COPY frontend/package*.json ./
+RUN npm install
+
+COPY frontend ./
+RUN npm run build
+
+# 2단계: Tomcat 이미지를 사용하여 Spring Boot 애플리케이션 배포
+FROM openjdk:11-jre-slim
 
 # 환경 변수 설정
 ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 
-# 워킹 디렉토리 설정
-WORKDIR /app
+# Tomcat 다운로드 및 설치
+RUN apt-get update && apt-get install -y wget \
+    && wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.54/bin/apache-tomcat-9.0.54.tar.gz \
+    && mkdir -p "$CATALINA_HOME" \
+    && tar xzvf apache-tomcat-9.0.54.tar.gz --strip-components=1 -C "$CATALINA_HOME" \
+    && rm apache-tomcat-9.0.54.tar.gz \
+    && rm -rf $CATALINA_HOME/webapps/examples \
+    && rm -rf $CATALINA_HOME/webapps/docs
 
-# Spring Boot 애플리케이션 빌드
-COPY ./milestone2/pom.xml ./milestone2/pom.xml
-COPY ./milestone2/src ./milestone2/src
-RUN mvn -f ./milestone2/pom.xml clean package
+# 프론트엔드 빌드 결과를 Tomcat의 ROOT 디렉토리로 복사
+COPY --from=build-frontend /app/frontend/build $CATALINA_HOME/webapps/ROOT
 
-# 생성된 WAR 파일을 Tomcat의 웹앱 디렉토리로 복사
-COPY ./milestone2/target/your-service.war $CATALINA_HOME/webapps/
+# Spring Boot WAR 파일을 Tomcat webapps 디렉토리에 복사
+COPY milestone2/target/your-service.war $CATALINA_HOME/webapps/your-service.war
 
-# 포트 노출
-EXPOSE 8080
-
-# Tomcat 시작
+# Tomcat 시작 명령
 CMD ["catalina.sh", "run"]
