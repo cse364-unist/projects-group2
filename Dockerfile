@@ -28,8 +28,6 @@ COPY ./run.sh /app
 
 RUN chmod -R 755 .
 
-# Build the React app
-RUN npm run build
 
 # Install serve to serve the build directory
 RUN npm install -g serve
