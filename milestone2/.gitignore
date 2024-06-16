@@ -28,6 +28,10 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+frontend/node_modules
+frontend/build
+frontend/package-lock.json
 
+src/main/resources/static/static
 ### VS Code ###
 .vscode/
