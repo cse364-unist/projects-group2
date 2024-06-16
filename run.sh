@@ -13,3 +13,6 @@ mvn clean test jacoco:report
 # mvn clean package
 
 mvn spring-boot:run
+
+cd /app/projects-group2/milestone2/frontend
+serve -s build -l 3000
