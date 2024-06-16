@@ -21,16 +21,10 @@ RUN apt-get update && apt-get install -y \
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm install
-
 COPY ./run.sh /app
 
 RUN chmod -R 755 .
 
-
-# Install serve to serve the build directory
-RUN npm install -g serve
 
 EXPOSE 8080
 EXPOSE 3000
