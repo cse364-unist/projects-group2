@@ -7,11 +7,11 @@ git checkout milestone3
 chmod -R 755 .
 
 
-#cd /app/projects-group2/milestone2/frontend
-#npm install
-#npm run build
-#npm install -g serve
-#serve -s build -l 3000
+cd /app/projects-group2/milestone2/frontend
+npm install
+npm run build
+npm install -g serve
+serve -s build -l 3000
 
 cd /app/projects-group2/milestone2
 
