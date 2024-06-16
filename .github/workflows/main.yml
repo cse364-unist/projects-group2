@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: mydatabase
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install frontend dependencies
+      working-directory: ./milestone2/frontend
+      run: npm install
+
+    - name: Run frontend tests
+      working-directory: ./milestone2/frontend
+      run: npm test
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+
+    - name: Install backend dependencies
+      working-directory: ./milestone2
+      run: ./mvnw install -DskipTests
+
+    - name: Run backend tests
+      working-directory: ./milestone2
+      env:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/mydatabase
+        SPRING_DATASOURCE_USERNAME: user
+        SPRING_DATASOURCE_PASSWORD: password
+      run: ./mvnw test
